@@ -1,0 +1,33 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ClusterServingRuntime
+metadata:
+  name: llamacpp
+spec:
+  supportedModelFormats:
+    - name: gguf
+      autoSelect: false
+      version: "1"
+  protocolVersions: ["v1"]
+  containers:
+    - name: kserve-container
+      ports:
+        - name: http1
+          containerPort: 8080
+          protocol: TCP
+      image: ghcr.io/zewolfe/kserve-llamacpp:dev
+      env:
+        - name: ANANSI_LOADER
+          value: "default"
+        - name: ANASI_LOADER_ARGS
+          value: ""
+        - name: LLAMA_PORT
+          value: 8080
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 0
+        periodSeconds: 1
+        timeoutSeconds: 1
+        failureThreshold: 5
+        successThreshold: 1
