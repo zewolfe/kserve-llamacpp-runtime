@@ -1,8 +1,9 @@
 ARG CUDA_VERSION=12.9.2
-ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
 
 # Base Image
 FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu24.04 AS builder-default
+
+ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -31,14 +32,14 @@ RUN cmake --build /build --target llama-server -j 4
 #  Builder Pipelined
 FROM builder-default AS builder-pipelined
 
-ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
-
 RUN cp /build/bin/llama-server /build/bin/llama-server-pipelined
 
 # Runtime
 
 ARG CUDA_VERSION=12.9.2
 FROM nvidia/cuda:$CUDA_VERSION-runtime-ubuntu24.04 AS runtime
+
+ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
  
 LABEL llamacpp.sha=$LLAMA_CPP_SHA
 LABEL llamacpp.pipelined.sha=""
