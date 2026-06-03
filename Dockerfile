@@ -54,10 +54,6 @@ COPY --from=builder-pipelined /build/bin/llama-server-pipelined /usr/local/bin/l
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-RUN (getent group 1000 || groupadd -g 1000 llama-user) \
- && (getent passwd 1000 && userdel -r ubuntu 2>/dev/null; true) \
- && useradd -u 1000 -g 1000 -m -s /bin/bash llama-user
-
 USER 1000:1000
 
 ENV ANANSI_LOADER=default \
