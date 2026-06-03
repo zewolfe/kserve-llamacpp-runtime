@@ -19,6 +19,10 @@ RUN apt-get update \
 RUN git clone https://github.com/ggml-org/llama.cpp.git /src/llama.cpp
 RUN cd /src/llama.cpp && git checkout $LLAMA_CPP_SHA 
 
+RUN ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
+ && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf \
+ && ldconfig
+
 RUN cmake -S /src/llama.cpp -B /build \
   -DGGML_CUDA=ON \
   -DCMAKE_BUILD_TYPE=Release \
