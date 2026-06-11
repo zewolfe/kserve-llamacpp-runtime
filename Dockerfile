@@ -1,7 +1,7 @@
 ARG CUDA_VERSION=12.4.1
 
 # Base Image
-FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu24.04 AS builder-default
+FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu22.04 AS builder-default
 
 ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
 
@@ -41,7 +41,7 @@ RUN cp /build/bin/llama-server /build/bin/llama-server-pipelined
 # Runtime
 
 ARG CUDA_VERSION=12.4.1
-FROM nvidia/cuda:$CUDA_VERSION-runtime-ubuntu24.04 AS runtime
+FROM nvidia/cuda:$CUDA_VERSION-runtime-ubuntu22.04 AS runtime
 
 ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
  
