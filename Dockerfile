@@ -1,4 +1,4 @@
-ARG CUDA_VERSION=12.9.2
+ARG CUDA_VERSION=12.4.1
 
 # Base Image
 FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu24.04 AS builder-default
@@ -26,7 +26,7 @@ RUN ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/li
 RUN cmake -S /src/llama.cpp -B /build \
   -DGGML_CUDA=ON \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_CUDA_ARCHITECTURES="86;89" \
+  -DCMAKE_CUDA_ARCHITECTURES="89" \
   -DGGML_NATIVE=OFF \
   -DLLAMA_BUILD_SERVER=ON
 
@@ -40,7 +40,7 @@ RUN cp /build/bin/llama-server /build/bin/llama-server-pipelined
 
 # Runtime
 
-ARG CUDA_VERSION=12.9.2
+ARG CUDA_VERSION=12.4.1
 FROM nvidia/cuda:$CUDA_VERSION-runtime-ubuntu24.04 AS runtime
 
 ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
