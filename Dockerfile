@@ -53,7 +53,14 @@ COPY --from=builder-default /build/bin/llama-server /usr/local/bin/llama-server
 COPY --from=builder-pipelined /build/bin/llama-server-pipelined /usr/local/bin/llama-server-pipelined
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+ENV LD_LIBRARY_PATH=/usr/local/bin:${LD_LIBRARY_PATH}
+
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libgomp1 \
+ && rm -rf /var/lib/apt/lists/*
 
 USER 1000:1000
 
