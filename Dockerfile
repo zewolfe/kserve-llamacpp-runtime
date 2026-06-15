@@ -48,6 +48,7 @@ ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
 LABEL llamacpp.sha=$LLAMA_CPP_SHA
 LABEL llamacpp.pipelined.sha=""
 
+COPY --from=builder-default /build/bin/ /usr/local/bin/
 COPY --from=builder-default /build/bin/llama-server /usr/local/bin/llama-server
 COPY --from=builder-pipelined /build/bin/llama-server-pipelined /usr/local/bin/llama-server-pipelined
 

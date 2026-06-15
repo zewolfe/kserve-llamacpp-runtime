@@ -1,0 +1,3 @@
+age.agekey
+deploy/secrets/*.yaml
+!deploy/secrets/*.enc.yaml

@@ -21,7 +21,7 @@ spec:
         - name: ANASI_LOADER_ARGS
           value: ""
         - name: LLAMA_PORT
-          value: 8080
+          value: "8080"
       readinessProbe:
         httpGet:
           path: /health
