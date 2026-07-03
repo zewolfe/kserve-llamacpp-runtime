@@ -6,16 +6,12 @@ log() { echo "[entrypoint] $*"; }
 
 case "${ANANSI_LOADER:-default}" in
   default) BINARY=/usr/local/bin/llama-server ;;
-  pipelined) BINARY=/usr/local/bin/llama-server-pipelined ;;
+  pool) BINARY=/usr/local/bin/llama-server-pooled ;;
   *)
-    log "ERROR: Unknown loader: '${ANANSI_LOADER}'; must be 'default' or 'pipelined'"
+    log "ERROR: Unknown loader: '${ANANSI_LOADER}'; must be 'default' or 'pool'"
     exit 64
     ;;
 esac
-
-if [[ "${ANANSI_LOADER:-default}" == "pipelined" ]]; then
-  log "NOTE: Using pipelined loader; M3 stub. Same as default loader."
-fi
 
 shopt -s nullglob
 candidates=(/mnt/models/*.gguf)

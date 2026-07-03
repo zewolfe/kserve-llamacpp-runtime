@@ -3,7 +3,7 @@ ARG CUDA_VERSION=12.4.1
 # Base Image
 FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu22.04 AS builder-default
 
-ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
+ARG LLAMA_CPP_SHA=812602fa101e798e2c59c8648ef67424606be711
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -16,7 +16,7 @@ RUN apt-get update \
   && find /var/cache/apt/archives /var/lib/apt/lists -not -name lock -type f -delete \
   && find /var/cache -type f -delete
 
-RUN git clone https://github.com/ggml-org/llama.cpp.git /src/llama.cpp
+RUN git clone https://github.com/zewolfe/llama.cpp.git /src/llama.cpp
 RUN cd /src/llama.cpp && git checkout $LLAMA_CPP_SHA 
 
 RUN ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
@@ -33,24 +33,24 @@ RUN cmake -S /src/llama.cpp -B /build \
 RUN cmake --build /build --target llama-server -j 4
 
 
-#  Builder Pipelined
-FROM builder-default AS builder-pipelined
+#  Builder Pooled
+FROM builder-default AS builder-pooled
 
-RUN cp /build/bin/llama-server /build/bin/llama-server-pipelined
+RUN cp /build/bin/llama-server /build/bin/llama-server-pooled
 
 # Runtime
 
 ARG CUDA_VERSION=12.4.1
 FROM nvidia/cuda:$CUDA_VERSION-runtime-ubuntu22.04 AS runtime
 
-ARG LLAMA_CPP_SHA=5254a7994d1c3b651878efd5b18b1d647a91b1f2
+ARG LLAMA_CPP_SHA=812602fa101e798e2c59c8648ef67424606be711
  
 LABEL llamacpp.sha=$LLAMA_CPP_SHA
-LABEL llamacpp.pipelined.sha=""
+LABEL llamacpp.pooled.sha=""
 
 COPY --from=builder-default /build/bin/ /usr/local/bin/
 COPY --from=builder-default /build/bin/llama-server /usr/local/bin/llama-server
-COPY --from=builder-pipelined /build/bin/llama-server-pipelined /usr/local/bin/llama-server-pipelined
+COPY --from=builder-pooled /build/bin/llama-server-pooled /usr/local/bin/llama-server-pooled
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 

@@ -14,7 +14,7 @@ spec:
         - name: http1
           containerPort: 8080
           protocol: TCP
-      image: ghcr.io/zewolfe/kserve-llamacpp:dev
+      image: ghcr.io/zewolfe/kserve-llamacpp:latest
       env:
         - name: ANANSI_LOADER
           value: "default"
