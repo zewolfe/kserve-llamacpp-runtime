@@ -3,7 +3,7 @@ ARG CUDA_VERSION=12.4.1
 # Base Image
 FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu22.04 AS builder-default
 
-ARG LLAMA_CPP_SHA=812602fa101e798e2c59c8648ef67424606be711
+ARG LLAMA_CPP_SHA=09fb4c1da7f648e4ed10d45d96ed96d9677a4b32
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -43,7 +43,7 @@ RUN cp /build/bin/llama-server /build/bin/llama-server-pooled
 ARG CUDA_VERSION=12.4.1
 FROM nvidia/cuda:$CUDA_VERSION-runtime-ubuntu22.04 AS runtime
 
-ARG LLAMA_CPP_SHA=812602fa101e798e2c59c8648ef67424606be711
+ARG LLAMA_CPP_SHA=09fb4c1da7f648e4ed10d45d96ed96d9677a4b32
  
 LABEL llamacpp.sha=$LLAMA_CPP_SHA
 LABEL llamacpp.pooled.sha=""
